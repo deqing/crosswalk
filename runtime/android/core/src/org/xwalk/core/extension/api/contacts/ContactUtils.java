@@ -108,6 +108,24 @@ public class ContactUtils {
         }
     }
 
+    @android.annotation.TargetApi(android.os.Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public long getLastUpdated(long contactId) {
+        String[] projection = new String[]{ ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP };
+
+        Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+        Cursor cursor = mResolver.query(uri, projection, null, null, null);
+        try {
+            if (cursor.moveToNext()) {
+                return cursor.getLong(0);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return -1;
+    }
+
     public Set<String> getCurrentRawIds() {
         Cursor c = null;
         try {
